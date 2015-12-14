@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,22 +27,13 @@ namespace WpfHorseRace
 
 		void StartRace()
 		{		
-			foreach( RaceHorse raceHorse in this.raceTrack.Items )
-				raceHorse.StartNewRace();
+            this.raceTrack.Items.Cast<RaceHorse>().ToList().ForEach(rh=>rh.StartNewRace());
 		}
 
-		static List<RaceHorse> CreateRaceHorses()
+		static IEnumerable<RaceHorse> CreateRaceHorses()
 		{
-			List<RaceHorse> raceHorses = new List<RaceHorse>(6);
-
-			raceHorses.Add( new RaceHorse( "Lucky Bell" ) );
-			raceHorses.Add( new RaceHorse( "Sweet Fate" ) );
-			raceHorses.Add( new RaceHorse( "Mr. Kentucky" ) );
-			raceHorses.Add( new RaceHorse( "Fresh Spice" ) );
-			raceHorses.Add( new RaceHorse( "Bluegrass" ) );
-			raceHorses.Add( new RaceHorse( "Kit Madison" ) );
-
-			return raceHorses;
+		    var horses = "Lucky;Sweet;Kentucky;Spice;BlueGrass;Kit".Split(';').ToList();
+		    return horses.Select(name => new RaceHorse(name));
 		}
 	}
 }
