@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
 namespace WpfHorseRace
@@ -12,49 +13,27 @@ namespace WpfHorseRace
 		#region Data
 
 		// Static fields
-		readonly static Random random;
+		static Random random = new Random( DateTime.Now.Millisecond );
 		static RaceHorse raceWinner = null;
 
 		// Instance fields
 		readonly DispatcherTimer timer = new DispatcherTimer();
 		readonly string name;
-		int percentComplete;
+	    private int percentComplete = 0;
 
 		#endregion // Data
-
-		#region Constructors
-
-		static RaceHorse()
-		{
-			RaceHorse.random = new Random( DateTime.Now.Millisecond );
-		}
 
 		public RaceHorse( string name )
 		{
 			this.name = name;
-			this.percentComplete = 0;
-					
 			this.timer.Tick += this.timer_Tick;			
 		}
 
-		#endregion // Constructors
-
 		#region Public Properties
 
-		public bool IsFinished
-		{
-			get { return this.PercentComplete >= 100; }
-		}
-
-		public bool IsWinner
-		{
-			get { return RaceHorse.raceWinner == this; }
-		}
-
-		public string Name
-		{
-			get { return this.name; }
-		}
+		public bool IsFinished => this.PercentComplete >= 100;
+		public bool IsWinner => RaceHorse.raceWinner == this;
+	    public string Name => this.name;
 
 		public int PercentComplete
 		{
@@ -133,8 +112,7 @@ namespace WpfHorseRace
 
 		private void RaisePropertyChanged( string propertyName )
 		{
-			if( this.PropertyChanged != null )
-				this.PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
+            this.PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
 		}
 
 		#endregion		
